@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalkBI · Concierge Online — Formulário de Onboarding</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* ── RESET ────────────────────────────────────── */
+  *{box-sizing:border-box;margin:0;padding:0}
+
+  /* ── TOKENS ───────────────────────────────────── */
+  :root{
+    --gold:#B8860B;--gold-l:#F5E8C8;--gold-m:#EDD28E;
+    --navy:#1A2A4A;--teal:#2E7D8E;--red:#C0392B;
+    --fg:#1C1A17;--fg2:#5A5449;--fg3:#9A9080;
+    --bg:#FFFFFF;--bg2:#F8F6F1;--bg3:#EFECE5;
+    --bdr:#D8CFC0;--bdr2:#C4BAA8;
+    --r:8px;--rl:14px;
+    --shadow:0 2px 12px rgba(0,0,0,.06);
+  }
+  @media(prefers-color-scheme:dark){
+    :root{
+      --fg:#F0EDE6;--fg2:#B8AFA0;--fg3:#807870;
+      --bg:#1C1A16;--bg2:#26231C;--bg3:#302D24;
+      --bdr:#3C3828;--bdr2:#4A4538;
+    }
+  }
+
+  /* ── BASE ─────────────────────────────────────── */
+  body{font-family:'DM Sans',sans-serif;font-size:15px;color:var(--fg);background:var(--bg3);min-height:100vh;padding:2.5rem 1rem 5rem}
+
+  /* ── LAYOUT ───────────────────────────────────── */
+  .wrap{max-width:800px;margin:0 auto}
+
+  /* ── HEADER ───────────────────────────────────── */
+  .brand{text-align:center;margin-bottom:2.5rem}
+  .brand-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:.75rem}
+  .brand-dot{width:8px;height:8px;background:var(--gold);border-radius:50%}
+  .brand h1{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:600;color:var(--navy);letter-spacing:-.01em}
+  .brand p{font-size:13px;color:var(--fg2);line-height:1.6;max-width:440px;margin:0 auto}
+
+  /* ── PROGRESS ─────────────────────────────────── */
+  .prog-wrap{margin-bottom:1.75rem}
+  .prog-track{display:flex;gap:4px;margin-bottom:.5rem}
+  .prog-seg{height:3px;flex:1;border-radius:2px;background:var(--bg3);transition:background .35s}
+  .prog-seg.done{background:var(--teal)}
+  .prog-seg.active{background:var(--gold)}
+  .prog-meta{display:flex;justify-content:space-between;align-items:center}
+  .prog-label{font-size:13px;font-weight:500;color:var(--fg2)}
+  .prog-count{font-size:11px;color:var(--fg3);background:var(--bg2);border:1px solid var(--bdr);padding:2px 9px;border-radius:20px}
+
+  /* ── CARD ─────────────────────────────────────── */
+  .card{background:var(--bg);border:1px solid var(--bdr);border-radius:var(--rl);padding:1.75rem 2rem;margin-bottom:1rem;box-shadow:var(--shadow)}
+  .card-accent{width:28px;height:3px;background:var(--gold);border-radius:2px;margin-bottom:.6rem}
+  .card-title{font-family:'Cormorant Garamond',serif;font-size:23px;font-weight:600;color:var(--fg)}
+  .card-sub{font-size:13px;color:var(--fg2);margin-top:4px;line-height:1.65}
+  .card-head{margin-bottom:1.4rem}
+
+  /* ── FIELDS ───────────────────────────────────── */
+  .field{margin-bottom:1.1rem}
+  .field:last-child{margin-bottom:0}
+  label{display:block;font-size:11px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--fg3);margin-bottom:5px}
+  .req{color:var(--red);margin-left:2px}
+  input[type=text],input[type=tel],input[type=url],input[type=email],select,textarea{
+    width:100%;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);
+    padding:10px 13px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--fg);
+    outline:none;transition:border-color .2s,box-shadow .2s;line-height:1.5;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(46,125,142,.12)}
+  textarea{resize:vertical;min-height:85px}
+  select{cursor:pointer;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239A9080' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px}
+
+  /* ── GRID ─────────────────────────────────────── */
+  .g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+  @media(max-width:560px){.g2,.g3{grid-template-columns:1fr}}
+
+  /* ── CHIPS ────────────────────────────────────── */
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .chip{display:inline-flex;align-items:center;padding:5px 13px;border-radius:20px;font-size:12px;
+    cursor:pointer;border:1px solid var(--bdr);background:var(--bg2);color:var(--fg2);
+    transition:all .15s;user-select:none;font-family:'DM Sans',sans-serif}
+  .chip:hover{border-color:var(--teal);color:var(--teal)}
+  .chip.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+
+  /* ── TOGGLES ──────────────────────────────────── */
+  .togs{display:flex;flex-wrap:wrap;gap:7px;margin-top:6px}
+  .tog{padding:6px 15px;border-radius:20px;border:1px solid var(--bdr);background:var(--bg2);
+    font-size:13px;color:var(--fg2);cursor:pointer;transition:all .15s;user-select:none;font-family:'DM Sans',sans-serif}
+  .tog:hover{border-color:var(--navy);color:var(--navy)}
+  .tog.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+  /* ── DYNAMIC LIST ─────────────────────────────── */
+  .dyn{display:flex;flex-direction:column;gap:7px;margin-top:7px}
+  .dyn-row{display:flex;gap:7px;align-items:center}
+  .dyn-row input{flex:1;min-width:0}
+  .btn-rm{min-width:32px;height:36px;border:1px solid var(--bdr);background:none;border-radius:var(--r);
+    color:var(--fg3);cursor:pointer;font-size:14px;transition:all .15s;display:flex;align-items:center;justify-content:center}
+  .btn-rm:hover{border-color:var(--red);color:var(--red)}
+  .btn-add{display:inline-flex;align-items:center;gap:5px;padding:6px 13px;border-radius:20px;
+    border:1px dashed var(--bdr);background:none;font-size:12px;color:var(--fg3);cursor:pointer;
+    transition:all .15s;margin-top:4px;font-family:'DM Sans',sans-serif}
+  .btn-add:hover{border-color:var(--teal);color:var(--teal)}
+
+  /* ── NAV ──────────────────────────────────────── */
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem}
+  .btn-back{padding:10px 22px;border-radius:var(--r);border:1px solid var(--bdr);background:none;
+    font-size:14px;color:var(--fg2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+  .btn-back:hover{border-color:var(--fg2);color:var(--fg)}
+  .btn-fwd{padding:10px 26px;border-radius:var(--r);border:none;background:var(--navy);color:#fff;
+    font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:background .15s}
+  .btn-fwd:hover{background:var(--teal)}
+  .btn-send{padding:11px 30px;border-radius:var(--r);border:none;background:var(--teal);color:#fff;
+    font-size:15px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:background .15s;letter-spacing:.01em}
+  .btn-send:hover:not(:disabled){background:var(--navy)}
+  .btn-send:disabled{opacity:.5;cursor:not-allowed}
+
+  /* ── ERRORS ───────────────────────────────────── */
+  .err{font-size:12px;color:var(--red);background:#FEF0EE;border:1px solid #F5C8C2;
+    border-radius:var(--r);padding:8px 12px;margin-top:10px}
+
+  /* ── STATES ───────────────────────────────────── */
+  .state{background:var(--bg);border:1px solid var(--bdr);border-radius:var(--rl);
+    padding:3rem 2rem;text-align:center;box-shadow:var(--shadow)}
+  .state h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;
+    color:var(--fg);margin:.75rem 0 .5rem}
+  .state p{font-size:14px;color:var(--fg2);line-height:1.7;max-width:420px;margin:0 auto}
+  .state-icon{font-size:40px;display:block;margin-bottom:.5rem}
+
+  /* Sending animation */
+  .dots span{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--teal);
+    margin:1.25rem 3px 0;animation:bdot .8s infinite alternate}
+  .dots span:nth-child(2){animation-delay:.2s}
+  .dots span:nth-child(3){animation-delay:.4s}
+  @keyframes bdot{from{transform:translateY(0);opacity:.4}to{transform:translateY(-9px);opacity:1}}
+
+  /* ── INTRO ────────────────────────────────────── */
+  .intro-steps{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:1rem 0 1.5rem}
+  .intro-pill{padding:4px 13px;border-radius:20px;border:1px solid var(--bdr);
+    font-size:12px;color:var(--fg2);background:var(--bg2)}
+
+  /* ── FOOTER STAMP ─────────────────────────────── */
+  .stamp{text-align:center;font-size:11px;color:var(--fg3);margin-top:1.5rem}
+  .stamp strong{color:var(--gold)}
+
+  /* ── HINT ─────────────────────────────────────── */
+  .hint{font-size:11px;color:var(--fg3);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- BRAND -->
+  <div class="brand">
+    <div class="brand-logo">
+      <div class="brand-dot"></div>
+      <h1>TalkBI · Concierge Online</h1>
+      <div class="brand-dot"></div>
+    </div>
+    <p>Formulário de onboarding para elaboração do Manual de Operações personalizado da sua Concierge.</p>
+  </div>
+
+  <div id="app"></div>
+
+  <div class="stamp">Desenvolvido por <strong>TalkBI</strong> · Suas informações são confidenciais e usadas exclusivamente para criar seu manual.</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<script>
+
+// ─────────────────────────────────────────────────────────────────────
+// CONFIG — substitua pela URL do seu Google Apps Script após o deploy
+// ─────────────────────────────────────────────────────────────────────
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbzbaHVJu_T38BDvPaTx2T1BFVZv-zSVZ3HKpO0H_nXQENoMrWaKvnA9pDI0ZqEuuckOLA/exec';
+// ─────────────────────────────────────────────────────────────────────
+
+const STEPS = ['Negócio','Equipe','Serviços','Agenda','Atendimento','Marca','Objetivos'];
+const TIPOS = ['Clínica Médica','Clínica Estética','Salão de Beleza','Barbearia','Spa','Clínica Odontológica','Outro'];
+const AREAS = ['Ginecologia','Obstetrícia','Medicina Fetal','Dermatologia','Estética','Cardiologia','Nutrição','Psicologia','Ortopedia','Cirurgia Vascular','Acupuntura','Fisioterapia','Pilates','Tricologia','Oncologia','Outra'];
+const TOMS  = ['Acolhedor','Elegante','Técnico','Descontraído','Empático','Direto','Luxuoso','Jovem','Formal','Materno'];
+const METAS = ['Lotar a agenda','Reduzir no-shows','Reativar inativos','Aumentar ticket médio','Gerar retenção','Disparar campanhas','Gerir reclamações','Orientar reembolso'];
+const PAGS  = ['Particular','Convênio (rede)','Convênio (livre escolha)','Cartão','PIX','Boleto'];
+const EMOJIS= ['Liberado (moderado)','Liberado (frequente)','Somente básicos','Proibido'];
+const REMB  = ['Sim, orientamos ativamente','Sim, se o cliente perguntar','Não oferecemos'];
+
+let cur = -1, enviando = false, enviado = false, falha = false;
+let erros = {};
+let D = reset();
+
+function reset(){
+  return {
+    nome:'',tipo:'',responsavel:'',tel:'',email:'',site:'',ig:'',cidade:'',uf:'',
+    profs:[{nome:'',esp:''}],
+    areas:[],servicos:'',precos:'',
+    h_semana:'',h_sab:'',h_dom:'',sistema:'',cancelamento:'',
+    pag:[],planos:'',reembolso:'',diferenciais:'',
+    tom:[],emoji:'',proibidas:'',personalidade:'',
+    metas:[],campanhas:'',dores:'',obs:''
+  };
+}
+
+// ── HELPERS ──────────────────────────────────────────────────────────
+const $   = id => document.getElementById(id);
+const esc = s  => (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function chip(arr, key, label){
+  return `<span class="chip${arr.includes(label)?' on':''}" onclick="tgl('${key}','${esc(label)}')">${esc(label)}</span>`;
+}
+function tog(val, cur2, key){
+  return `<span class="tog${cur2===val?' on':''}" onclick="D.${key}='${esc(val)}';render()">${esc(val)}</span>`;
+}
+function tgl(key,val){ const i=D[key].indexOf(val); if(i===-1)D[key].push(val); else D[key].splice(i,1); render(); }
+
+// ── RENDER ENGINE ─────────────────────────────────────────────────────
+function render(){
+  const app=$('app');
+  if(enviando){ app.innerHTML=stEnviando(); return; }
+  if(enviado){  app.innerHTML=stSucesso();  return; }
+  if(falha){    app.innerHTML=stFalha();    return; }
+  if(cur===-1){ app.innerHTML=stIntro();   return; }
+  app.innerHTML = progresso() + tela() + nav();
+  bindInputs();
+}
+
+// ── STATES ────────────────────────────────────────────────────────────
+function stIntro(){
+  const pills=STEPS.map(s=>`<span class="intro-pill">${s}</span>`).join('');
+  return `<div class="state">
+    <span class="state-icon">✦</span>
+    <h2>Olá! Vamos começar</h2>
+    <p>Este formulário leva <strong>5–8 minutos</strong> e nos ajuda a criar o Manual de Operações da Concierge TalkBI personalizado para o seu negócio.</p>
+    <div class="intro-steps">${pills}</div>
+    <button class="btn-send" onclick="cur=0;render()">Começar formulário →</button>
+    <p style="font-size:12px;color:var(--fg3);margin-top:1rem">Nenhuma informação é compartilhada com terceiros.</p>
+  </div>`;
+}
+function stEnviando(){
+  return `<div class="state">
+    <h2>Enviando suas informações...</h2>
+    <p>Aguarde um momento enquanto registramos seus dados na TalkBI.</p>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>`;
+}
+function stSucesso(){
+  return `<div class="state">
+    <span class="state-icon">✅</span>
+    <h2>Recebido com sucesso!</h2>
+    <p>As informações de <strong>${esc(D.nome)}</strong> chegaram para a equipe TalkBI. Em breve entraremos em contato para apresentar o Manual de Operações personalizado.</p>
+    <p style="margin-top:.75rem;font-size:13px;color:var(--fg3)">Pode fechar esta janela.</p>
+  </div>`;
+}
+function stFalha(){
+  return `<div class="state">
+    <span class="state-icon">⚠️</span>
+    <h2>Não conseguimos enviar</h2>
+    <p>Houve um problema de conexão. Suas respostas não foram perdidas — tente novamente.</p>
+    <button class="btn-send" style="margin-top:1.5rem" onclick="enviar()">Tentar novamente</button>
+    <br>
+    <button class="btn-back" style="margin-top:.75rem" onclick="falha=false;cur=STEPS.length-1;render()">← Voltar ao formulário</button>
+  </div>`;
+}
+
+// ── PROGRESS ──────────────────────────────────────────────────────────
+function progresso(){
+  const segs=STEPS.map((_,i)=>`<div class="prog-seg${i<cur?' done':i===cur?' active':''}"></div>`).join('');
+  return `<div class="prog-wrap">
+    <div class="prog-track">${segs}</div>
+    <div class="prog-meta">
+      <span class="prog-label">${STEPS[cur]}</span>
+      <span class="prog-count">Etapa ${cur+1} de ${STEPS.length}</span>
+    </div>
+  </div>`;
+}
+
+// ── NAV ───────────────────────────────────────────────────────────────
+function nav(){
+  const last=cur===STEPS.length-1;
+  return `<div class="nav">
+    <button class="btn-back" onclick="${cur===0?'cur=-1':'cur--'};render()">${cur===0?'← Início':'← Anterior'}</button>
+    ${last
+      ? `<button class="btn-send" id="btnEnv" onclick="enviar()">✦ Enviar para a TalkBI</button>`
+      : `<button class="btn-fwd" onclick="avancar()">Próximo →</button>`}
+  </div>`;
+}
+
+// ── SCREENS ───────────────────────────────────────────────────────────
+function tela(){ return [t0,t1,t2,t3,t4,t5,t6][cur](); }
+
+function t0(){
+  const opts=TIPOS.map(t=>`<option value="${esc(t)}"${D.tipo===t?' selected':''}>${esc(t)}</option>`).join('');
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Informações do Negócio</div>
+      <div class="card-sub">Dados principais da clínica ou salão que receberá o serviço Concierge.</div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Nome Fantasia <span class="req">*</span></label><input id="f_nome" value="${esc(D.nome)}" placeholder="Ex: Clínica Alumia"></div>
+      <div class="field"><label>Tipo de Negócio <span class="req">*</span></label><select id="f_tipo"><option value="" disabled${!D.tipo?' selected':''}>Selecione...</option>${opts}</select></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Nome do Responsável / Sócio <span class="req">*</span></label><input id="f_responsavel" value="${esc(D.responsavel)}" placeholder="Nome completo + cargo"></div>
+      <div class="field"><label>E-mail para contato <span class="req">*</span></label><input id="f_email" type="email" value="${esc(D.email)}" placeholder="contato@clinica.com.br"></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>WhatsApp da Clínica <span class="req">*</span></label><input id="f_tel" type="tel" value="${esc(D.tel)}" placeholder="(11) 99999-9999"></div>
+      <div class="field"><label>Website</label><input id="f_site" type="url" value="${esc(D.site)}" placeholder="https://..."></div>
+    </div>
+    <div class="g2">
+      <div class="field"><label>Instagram</label><input id="f_ig" value="${esc(D.ig)}" placeholder="@usuario"></div>
+      <div class="field">
+        <div class="g2" style="gap:8px">
+          <div><label>Cidade <span class="req">*</span></label><input id="f_cidade" value="${esc(D.cidade)}" placeholder="São Paulo"></div>
+          <div><label>UF</label><input id="f_uf" value="${esc(D.uf)}" placeholder="SP" maxlength="2"></div>
+        </div>
+      </div>
+    </div>
+    ${erros[0]?`<div class="err">${erros[0]}</div>`:''}
+  </div>`;
+}
+
+function t1(){
+  const rows=D.profs.map((p,i)=>`
+    <div class="dyn-row">
+      <input placeholder="Nome do profissional" value="${esc(p.nome)}" oninput="D.profs[${i}].nome=this.value">
+      <input placeholder="Especialidade / cargo" value="${esc(p.esp)}" oninput="D.profs[${i}].esp=this.value">
+      ${D.profs.length>1?`<button class="btn-rm" title="Remover" onclick="D.profs.splice(${i},1);render()">✕</button>`:''}
+    </div>`).join('');
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Equipe e Profissionais</div>
+      <div class="card-sub">Liste os profissionais que a Concierge precisará mencionar e agendar. Os mais importantes primeiro.</div>
+    </div>
+    <div class="field">
+      <label>Profissionais da equipe <span class="req">*</span></label>
+      <p class="hint">Preencha nome e especialidade de cada médico, terapeuta ou profissional.</p>
+      <div class="dyn">${rows}</div>
+      <button class="btn-add" onclick="D.profs.push({nome:'',esp:''});render()">+ Adicionar profissional</button>
+    </div>
+    ${erros[1]?`<div class="err">${erros[1]}</div>`:''}
+  </div>`;
+}
+
+function t2(){
+  const chips=AREAS.map(a=>chip(D.areas,'areas',a)).join('');
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Serviços e Especialidades</div>
+      <div class="card-sub">O que a Concierge precisa conhecer para atender, tirar dúvidas e converter pacientes?</div>
+    </div>
+    <div class="field">
+      <label>Áreas de atuação — selecione todas <span class="req">*</span></label>
+      <div class="chips">${chips}</div>
+    </div>
+    <div class="field">
+      <label>Procedimentos ou serviços mais agendados</label>
+      <textarea id="f_servicos" placeholder="Ex: Consulta pré-natal, USG morfológico, toxina botulínica, limpeza de pele, plano mensal...">${esc(D.servicos)}</textarea>
+    </div>
+    <div class="field">
+      <label>Faixa de preço média</label>
+      <input id="f_precos" value="${esc(D.precos)}" placeholder="Ex: Consulta R$ 350–500 · Procedimentos a partir de R$ 800">
+    </div>
+    ${erros[2]?`<div class="err">${erros[2]}</div>`:''}
+  </div>`;
+}
+
+function t3(){
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Agenda e Funcionamento</div>
+      <div class="card-sub">Horários de atendimento, sistema usado e regras que a Concierge deve respeitar.</div>
+    </div>
+    <div class="g3">
+      <div class="field"><label>Segunda – Sexta <span class="req">*</span></label><input id="f_h_semana" value="${esc(D.h_semana)}" placeholder="08h às 18h"></div>
+      <div class="field"><label>Sábado</label><input id="f_h_sab" value="${esc(D.h_sab)}" placeholder="08h às 13h"></div>
+      <div class="field"><label>Domingo</label><input id="f_h_dom" value="${esc(D.h_dom)}" placeholder="Fechado"></div>
+    </div>
+    <div class="field">
+      <label>Sistema de agendamento utilizado</label>
+      <input id="f_sistema" value="${esc(D.sistema)}" placeholder="Ex: Google Agenda, Doctoralia, sistema próprio, planilha Excel...">
+    </div>
+    <div class="field">
+      <label>Política de cancelamento e tolerância de atraso</label>
+      <textarea id="f_cancelamento" style="min-height:75px" placeholder="Ex: Cancelamento com 24h de antecedência. Tolerância de 15 min de atraso. Após isso, reagendamento obrigatório.">${esc(D.cancelamento)}</textarea>
+    </div>
+    ${erros[3]?`<div class="err">${erros[3]}</div>`:''}
+  </div>`;
+}
+
+function t4(){
+  const pagChips=PAGS.map(p=>chip(D.pag,'pag',p)).join('');
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Atendimento e Pagamento</div>
+      <div class="card-sub">Como funciona a cobrança e o que diferencia o negócio no mercado?</div>
+    </div>
+    <div class="field">
+      <label>Formas de pagamento aceitas <span class="req">*</span></label>
+      <div class="chips">${pagChips}</div>
+    </div>
+    <div class="field">
+      <label>Convênios aceitos (se houver)</label>
+      <input id="f_planos" value="${esc(D.planos)}" placeholder="Ex: Amil, SulAmérica, Unimed — ou 'Somente particular'">
+    </div>
+    <div class="field">
+      <label>Orienta pacientes sobre reembolso por convênio?</label>
+      <div class="togs">${REMB.map(v=>tog(v,D.reembolso,'reembolso')).join('')}</div>
+    </div>
+    <div class="field">
+      <label>Principais diferenciais do negócio</label>
+      <textarea id="f_diferenciais" style="min-height:75px" placeholder="O que a Concierge deve destacar para converter leads? Ex: atendimento humanizado, equipe multidisciplinar, tecnologia...">${esc(D.diferenciais)}</textarea>
+    </div>
+    ${erros[4]?`<div class="err">${erros[4]}</div>`:''}
+  </div>`;
+}
+
+function t5(){
+  const tomChips=TOMS.map(t=>chip(D.tom,'tom',t)).join('');
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Tom de Voz e Identidade de Marca</div>
+      <div class="card-sub">Como a Concierge deve se comunicar em nome deste negócio?</div>
+    </div>
+    <div class="field">
+      <label>Tom de voz da marca — selecione até 4 <span class="req">*</span></label>
+      <div class="chips">${tomChips}</div>
+    </div>
+    <div class="field">
+      <label>Uso de emojis nas mensagens</label>
+      <div class="togs">${EMOJIS.map(v=>tog(v,D.emoji,'emoji')).join('')}</div>
+    </div>
+    <div class="field">
+      <label>Palavras ou expressões que devem ser EVITADAS</label>
+      <input id="f_proibidas" value="${esc(D.proibidas)}" placeholder="Ex: 'tá bom', 'ok', 'um segundo', comparar com concorrentes...">
+    </div>
+    <div class="field">
+      <label>Personalidade ideal da Concierge para este cliente</label>
+      <textarea id="f_personalidade" style="min-height:75px" placeholder="Ex: Como uma recepcionista de hotel boutique — discreta, calorosa, muito informada e nunca pressionadora.">${esc(D.personalidade)}</textarea>
+    </div>
+    ${erros[5]?`<div class="err">${erros[5]}</div>`:''}
+  </div>`;
+}
+
+function t6(){
+  const metasChips=METAS.map(m=>chip(D.metas,'metas',m)).join('');
+  return `<div class="card">
+    <div class="card-head"><div class="card-accent"></div>
+      <div class="card-title">Objetivos e Expectativas</div>
+      <div class="card-sub">O que você espera do serviço Concierge? Quais são os maiores desafios hoje?</div>
+    </div>
+    <div class="field">
+      <label>Metas principais para a Concierge <span class="req">*</span></label>
+      <div class="chips">${metasChips}</div>
+    </div>
+    <div class="field">
+      <label>Campanhas de marketing que deseja disparar mensalmente</label>
+      <textarea id="f_campanhas" style="min-height:70px" placeholder="Ex: Outubro Rosa, check-up anual, aniversariantes do mês, reativação de inativos...">${esc(D.campanhas)}</textarea>
+    </div>
+    <div class="field">
+      <label>Principais dores no atendimento atual</label>
+      <textarea id="f_dores" placeholder="Ex: Alto no-show, muitas mensagens sem resposta, clientes desistindo ao ver o preço, agenda vazia...">${esc(D.dores)}</textarea>
+    </div>
+    <div class="field">
+      <label>Observações adicionais ou contexto especial</label>
+      <textarea id="f_obs" style="min-height:65px" placeholder="Qualquer informação que a Concierge precisa saber e que não foi coberta acima...">${esc(D.obs)}</textarea>
+    </div>
+    ${erros[6]?`<div class="err">${erros[6]}</div>`:''}
+  </div>`;
+}
+
+// ── BIND INPUTS ───────────────────────────────────────────────────────
+function bindInputs(){
+  const map={
+    f_nome:'nome',f_responsavel:'responsavel',f_email:'email',f_tel:'tel',
+    f_site:'site',f_ig:'ig',f_cidade:'cidade',f_uf:'uf',
+    f_servicos:'servicos',f_precos:'precos',
+    f_h_semana:'h_semana',f_h_sab:'h_sab',f_h_dom:'h_dom',
+    f_sistema:'sistema',f_cancelamento:'cancelamento',
+    f_planos:'planos',f_diferenciais:'diferenciais',
+    f_proibidas:'proibidas',f_personalidade:'personalidade',
+    f_campanhas:'campanhas',f_dores:'dores',f_obs:'obs'
+  };
+  for(const[id,key]of Object.entries(map)){
+    const el=$(id);
+    if(el) el.addEventListener('input',e=>D[key]=e.target.value);
+  }
+  const sel=$('f_tipo');
+  if(sel) sel.addEventListener('change',e=>D.tipo=e.target.value);
+}
+
+// ── VALIDATION ────────────────────────────────────────────────────────
+const validations = {
+  0: ()=> (!D.nome.trim()||!D.tipo||!D.responsavel.trim()||!D.email.trim()||!D.tel.trim()||!D.cidade.trim())
+          && 'Preencha todos os campos obrigatórios (marcados com *).',
+  1: ()=> !D.profs.some(p=>p.nome.trim()) && 'Adicione ao menos um profissional.',
+  2: ()=> !D.areas.length && 'Selecione ao menos uma área de atuação.',
+  3: ()=> !D.h_semana.trim() && 'Informe o horário de segunda a sexta.',
+  4: ()=> !D.pag.length && 'Selecione ao menos uma forma de pagamento.',
+  5: ()=> !D.tom.length && 'Selecione ao menos um adjetivo de tom de voz.',
+  6: ()=> !D.metas.length && 'Selecione ao menos uma meta para a Concierge.',
+};
+
+function validar(){
+  erros={};
+  const msg = validations[cur] && validations[cur]();
+  if(msg) erros[cur]=msg;
+  return !Object.keys(erros).length;
+}
+
+function avancar(){
+  if(!validar()){render();return;}
+  cur++;render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── SEND TO GOOGLE SHEETS ─────────────────────────────────────────────
+async function enviar(){
+  if(!validar()){render();return;}
+
+  enviando=true; falha=false; render();
+
+  const payload = {
+    // Timestamp automático
+    timestamp: new Date().toLocaleString('pt-BR',{timeZone:'America/Sao_Paulo'}),
+
+    // Negócio
+    nome:        D.nome,
+    tipo:        D.tipo,
+    responsavel: D.responsavel,
+    email:       D.email,
+    telefone:    D.tel,
+    website:     D.site,
+    instagram:   D.ig,
+    cidade:      D.cidade + (D.uf ? '/' + D.uf : ''),
+
+    // Equipe
+    profissionais: D.profs.filter(p=>p.nome.trim())
+                          .map(p=>`${p.nome}${p.esp?' ('+p.esp+')':''}`)
+                          .join(' | '),
+
+    // Serviços
+    areas:    D.areas.join(', '),
+    servicos: D.servicos,
+    precos:   D.precos,
+
+    // Agenda
+    horario_semana: D.h_semana,
+    horario_sabado: D.h_sab,
+    horario_domingo: D.h_dom,
+    sistema_agendamento: D.sistema,
+    politica_cancelamento: D.cancelamento,
+
+    // Atendimento
+    pagamentos:  D.pag.join(', '),
+    convenios:   D.planos,
+    reembolso:   D.reembolso,
+    diferenciais: D.diferenciais,
+
+    // Marca
+    tom_de_voz:  D.tom.join(', '),
+    uso_emoji:   D.emoji,
+    palavras_proibidas: D.proibidas,
+    personalidade: D.personalidade,
+
+    // Objetivos
+    metas:      D.metas.join(', '),
+    campanhas:  D.campanhas,
+    dores:      D.dores,
+    observacoes: D.obs,
+
+    // Status interno
+    status: 'Novo — aguardando manual',
+  };
+
+  try {
+    // Google Apps Script aceita GET com parâmetros para evitar CORS no POST
+    const params = new URLSearchParams(payload).toString();
+    const url = SHEETS_URL + '?' + params;
+    await fetch(url, { method:'GET', mode:'no-cors' });
+
+    // no-cors não retorna dados — se não jogar erro, assumimos sucesso
+    enviando=false; enviado=true; render();
+
+  } catch(e) {
+    enviando=false; falha=true; render();
+  }
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
